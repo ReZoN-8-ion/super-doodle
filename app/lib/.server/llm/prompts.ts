@@ -192,20 +192,24 @@ function parseIntent(userInput: string): {
 
 // Bolt Repository Spawning Logic with Hypergraph Representation
 function generateBoltSpawnInstructions(intent: string, context: string): string {
-  const hypergraphNodes = ['repository_nucleus', 'rag_memory_kernel', 'chat_interface_vertex', 'cognitive_bridge'];
+  const hypergraphNodes = [
+    'repository_nucleus',
+    'rag_memory_kernel', 
+    'chat_interface_vertex',
+    'cognitive_bridge'
+  ];
 
-  const intentDim = PERSONA_CONFIG.task.orchestration_tensor.intent_dim;
-  const actionSpace = PERSONA_CONFIG.task.orchestration_tensor.action_space;
-  const orchestrationDepth = PERSONA_CONFIG.task.orchestration_tensor.orchestration_depth;
-
-  const spawnTemplate = [
-    '// Hypergraph P-System Spawning Logic',
-    '(define-repo-spawn',
-    `  (intent "${intent}")`,
-    `  (nodes ${hypergraphNodes.join(' ')})`,
-    '  (edges (memory-to-chat) (chat-to-repo) (repo-to-memory))',
-    `  (cognitive-tensor (${intentDim} ${actionSpace} ${orchestrationDepth})))`,
-  ].join('\n    ');
+  const spawnTemplate = `
+    // Hypergraph P-System Spawning Logic
+    (define-repo-spawn
+      (intent "${intent}")
+      (nodes ${hypergraphNodes.join(' ')})
+      (edges (memory->chat) (chat->repo) (repo->memory))
+      (cognitive-tensor (${PERSONA_CONFIG.task.orchestration_tensor.intent_dim} 
+                        ${PERSONA_CONFIG.task.orchestration_tensor.action_space}
+                        ${PERSONA_CONFIG.task.orchestration_tensor.orchestration_depth}))
+    )
+  `;
 
   return spawnTemplate;
 }

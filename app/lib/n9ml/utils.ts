@@ -13,7 +13,18 @@ export function parsePath(path: string): CognitiveIntent {
     throw new Error('Invalid path: must contain at least domain and task');
   }
 
-  const [domain, task, ...modifiers] = parts;
+  // Handle different path patterns:
+  // Pattern 1: /models/vision/realtime -> domain='vision', task='realtime'
+  // Pattern 2: /inference/nlp/precise -> domain='nlp', task='precise'
+  let domain: string, task: string, modifiers: string[];
+  
+  if (parts.length >= 3 && (parts[0] === 'models' || parts[0] === 'inference')) {
+    // Skip namespace prefix and use second part as domain
+    [, domain, task, ...modifiers] = parts;
+  } else {
+    // Direct domain/task format
+    [domain, task, ...modifiers] = parts;
+  }
   
   // Determine precision from task name and modifiers
   let precision: 'high' | 'medium' | 'low' = 'medium';
@@ -82,7 +93,9 @@ export function collapseQuantumField(intent: CognitiveIntent, quant: Quantizatio
     type = 'cnn';
   } else if (intent.domain === 'sequence' || intent.task.indexOf('time') !== -1) {
     type = 'rnn';
-  } else if (intent.complexity > 7) {
+  } else if (intent.domain === 'nlp') {
+    type = 'transformer';
+  } else if (intent.complexity > 7 && intent.domain === 'multimodal') {
     type = 'hybrid';
   }
 

@@ -202,7 +202,7 @@ function generateBoltSpawnInstructions(intent: string, context: string): string 
   const spawnTemplate = `
     // Hypergraph P-System Spawning Logic
     (define-repo-spawn
-      (intent "${intent}")
+      (intent "` + intent + `")
       (nodes ${hypergraphNodes.join(' ')})
       (edges (memory->chat) (chat->repo) (repo->memory))
       (cognitive-tensor (${PERSONA_CONFIG.task.orchestration_tensor.intent_dim} 

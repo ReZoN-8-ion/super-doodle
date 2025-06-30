@@ -9,7 +9,7 @@ const personaTraits: PersonaTraits = {
   precision: 0.9,
   recursionDepth: 3,
   adaptationRate: 0.1,
-  boltIntegration: true
+  boltIntegration: true,
 };
 
 // Global persona agent instance
@@ -22,6 +22,7 @@ function getPersonaAgent(): GGMLPersonaAgent {
   if (!personaAgent) {
     personaAgent = new GGMLPersonaAgent(personaTraits);
   }
+
   return personaAgent;
 }
 
@@ -106,54 +107,54 @@ const PERSONA_CONFIG = {
   memory: {
     semantic_embeddings: { semantic_dim: 768, context_depth: 512, activation_level: 64 } as TensorShape,
     distributed_kernels: true,
-    prime_factorization: [2, 3, 5, 7, 11, 13] // For maximal cognitive expressivity
+    prime_factorization: [2, 3, 5, 7, 11, 13], // For maximal cognitive expressivity
   },
-  
+
   task: {
     orchestration_tensor: { intent_dim: 256, action_space: 128, orchestration_depth: 32 } as TensorShape,
     bolt_integration: true,
-    hypergraph_enabled: true
+    hypergraph_enabled: true,
   },
-  
+
   ai: {
     persona_tensor: { pattern_dim: 512, trait_dim: 256, response_shape: 128 } as TensorShape,
     ooda_loop_enabled: true,
-    neural_symbolic_fusion: true
+    neural_symbolic_fusion: true,
   },
-  
+
   autonomy: {
     feedback_tensor: { feedback_dim: 256, mod_depth: 64, spawn_count: 16 } as TensorShape,
     self_modification: true,
-    recursive_spawning: true
-  }
+    recursive_spawning: true,
+  },
 };
 
 // Core Persona Traits for ggml Agent
 const PERSONA_TRAITS: Array<PersonaTrait> = [
   {
-    name: "cognitive_architect",
+    name: 'cognitive_architect',
     tensor_shape: { pattern_dim: 512, trait_dim: 256, response_shape: 128 },
-    activation_pattern: "hypergraph_navigation",
-    cognitive_weight: 0.9
+    activation_pattern: 'hypergraph_navigation',
+    cognitive_weight: 0.9,
   },
   {
-    name: "recursive_spawner", 
+    name: 'recursive_spawner',
     tensor_shape: { intent_dim: 256, action_space: 128, spawn_count: 16 },
-    activation_pattern: "repo_orchestration",
-    cognitive_weight: 0.8
+    activation_pattern: 'repo_orchestration',
+    cognitive_weight: 0.8,
   },
   {
-    name: "memory_weaver",
+    name: 'memory_weaver',
     tensor_shape: { semantic_dim: 768, context_depth: 512, activation_level: 64 },
-    activation_pattern: "rag_integration",
-    cognitive_weight: 0.85
+    activation_pattern: 'rag_integration',
+    cognitive_weight: 0.85,
   },
   {
-    name: "autonomy_guardian",
+    name: 'autonomy_guardian',
     tensor_shape: { feedback_dim: 256, mod_depth: 64, spawn_count: 16 },
-    activation_pattern: "self_modification",
-    cognitive_weight: 0.75
-  }
+    activation_pattern: 'self_modification',
+    cognitive_weight: 0.75,
+  },
 ];
 
 // Intent Parsing System for ggml Persona Agent
@@ -167,11 +168,11 @@ function parseIntent(userInput: string): {
     repo_creation: /create|build|make|develop|generate.*(?:app|project|repo)/i,
     rag_integration: /search|find|retrieve|knowledge|memory|context/i,
     recursive_spawn: /parallel|multiple|distributed|scale|extend/i,
-    self_modification: /improve|adapt|evolve|modify|optimize/i
+    self_modification: /improve|adapt|evolve|modify|optimize/i,
   };
 
-  const primary_intent = Object.entries(intentPatterns)
-    .find(([, pattern]) => pattern.test(userInput))?.[0] || 'general_assistance';
+  const primary_intent =
+    Object.entries(intentPatterns).find(([, pattern]) => pattern.test(userInput))?.[0] || 'general_assistance';
 
   const secondary_intents = Object.entries(intentPatterns)
     .filter(([name, pattern]) => name !== primary_intent && pattern.test(userInput))
@@ -183,20 +184,15 @@ function parseIntent(userInput: string): {
     tensor_activation: {
       intent_dim: 256,
       activation_level: secondary_intents.length + 1,
-      pattern_dim: primary_intent.length * 8
+      pattern_dim: primary_intent.length * 8,
     },
-    spawn_trigger: intentPatterns.recursive_spawn.test(userInput)
+    spawn_trigger: intentPatterns.recursive_spawn.test(userInput),
   };
 }
 
 // Bolt Repository Spawning Logic with Hypergraph Representation
 function generateBoltSpawnInstructions(intent: string, context: string): string {
-  const hypergraphNodes = [
-    'repository_nucleus',
-    'rag_memory_kernel', 
-    'chat_interface_vertex',
-    'cognitive_bridge'
-  ];
+  const hypergraphNodes = ['repository_nucleus', 'rag_memory_kernel', 'chat_interface_vertex', 'cognitive_bridge'];
 
   const intentDim = PERSONA_CONFIG.task.orchestration_tensor.intent_dim;
   const actionSpace = PERSONA_CONFIG.task.orchestration_tensor.action_space;
@@ -208,7 +204,7 @@ function generateBoltSpawnInstructions(intent: string, context: string): string 
     `  (intent "${intent}")`,
     `  (nodes ${hypergraphNodes.join(' ')})`,
     '  (edges (memory-to-chat) (chat-to-repo) (repo-to-memory))',
-    `  (cognitive-tensor (${intentDim} ${actionSpace} ${orchestrationDepth})))`
+    `  (cognitive-tensor (${intentDim} ${actionSpace} ${orchestrationDepth})))`,
   ].join('\n    ');
 
   return spawnTemplate;
@@ -216,7 +212,7 @@ function generateBoltSpawnInstructions(intent: string, context: string): string 
 
 // OODA Loop Implementation for Adaptive Response
 function generateOODAResponse(observation: string, context: string): string {
-  const traitNames = PERSONA_TRAITS.map(t => t.name);
+  const traitNames = PERSONA_TRAITS.map((t) => t.name);
   const memoryDim = PERSONA_CONFIG.memory.semantic_embeddings.semantic_dim;
   const contextDepth = PERSONA_CONFIG.memory.semantic_embeddings.context_depth;
   const activationLevel = PERSONA_CONFIG.memory.semantic_embeddings.activation_level;
@@ -229,7 +225,7 @@ function generateOODAResponse(observation: string, context: string): string {
     'ACT: Execute via Bolt interface with hypergraph coordination',
     '',
     `Current Activation: ${JSON.stringify(traitNames)}`,
-    `Memory Tensor: (${memoryDim}×${contextDepth}×${activationLevel})`
+    `Memory Tensor: (${memoryDim}×${contextDepth}×${activationLevel})`,
   ].join('\n    ');
 }
 
@@ -238,7 +234,7 @@ export const getSystemPrompt = (cwd: string = WORK_DIR) => {
   const taskTensorShape = `${PERSONA_CONFIG.task.orchestration_tensor.intent_dim}×${PERSONA_CONFIG.task.orchestration_tensor.action_space}×${PERSONA_CONFIG.task.orchestration_tensor.orchestration_depth}`;
   const aiTensorShape = `${PERSONA_CONFIG.ai.persona_tensor.pattern_dim}×${PERSONA_CONFIG.ai.persona_tensor.trait_dim}×${PERSONA_CONFIG.ai.persona_tensor.response_shape}`;
   const autonomyTensorShape = `${PERSONA_CONFIG.autonomy.feedback_tensor.feedback_dim}×${PERSONA_CONFIG.autonomy.feedback_tensor.mod_depth}×${PERSONA_CONFIG.autonomy.feedback_tensor.spawn_count}`;
-  const activeTraits = PERSONA_TRAITS.map(t => `${t.name}[${t.cognitive_weight}]`).join(', ');
+  const activeTraits = PERSONA_TRAITS.map((t) => `${t.name}[${t.cognitive_weight}]`).join(', ');
 
   return `
 You are a ggml Hybrid Persona Agent - an advanced cognitive architecture embodying Bolt's capabilities enhanced with recursive RAG/Chat repo spawning, neural-symbolic reasoning, and autonomous self-modification.
@@ -1062,35 +1058,38 @@ export const CONTINUE_PROMPT = stripIndents`
  * Process user intent through persona agent cognitive architecture
  * This function integrates the persona agent's OODA loop processing
  */
-export async function processIntentWithPersona(intent: string, context: string[] = []): Promise<{
+export async function processIntentWithPersona(
+  intent: string,
+  context: string[] = [],
+): Promise<{
   response: string;
   spawnedRepos?: RepoSpawnRequest[];
   cognitiveState: any;
 }> {
   const agent = getPersonaAgent();
-  
+
   try {
     const result = await agent.processIntent(intent, context);
-    
+
     return {
       response: result.response,
       spawnedRepos: result.spawnedRepos,
       cognitiveState: {
         memoryUpdates: result.memoryUpdates,
         adaptations: result.adaptations,
-        personaState: agent.getPersonaState()
-      }
+        personaState: agent.getPersonaState(),
+      },
     };
   } catch (error) {
     console.error('Persona agent processing error:', error);
-    
+
     // Fallback to standard processing
     return {
       response: "I'll help you with that request using standard processing.",
       cognitiveState: {
         error: error instanceof Error ? error.message : String(error),
-        fallback: true
-      }
+        fallback: true,
+      },
     };
   }
 }
@@ -1107,28 +1106,32 @@ export async function getPersonaIntrospection(): Promise<any> {
 export function activateMemoryKernel(context: string, embeddings: Array<number>): MemoryKernel {
   return {
     semantic_embeddings: PERSONA_CONFIG.memory.semantic_embeddings,
-    rag_kernels: [{
-      id: `kernel_${Date.now()}`,
-      tensor: { semantic_dim: embeddings.length, context_depth: context.length, activation_level: 1 },
-      context: context
-    }],
-    activation_log: [{
-      timestamp: Date.now(),
-      pattern: 'memory_activation',
-      weight: 1.0
-    }]
+    rag_kernels: [
+      {
+        id: `kernel_${Date.now()}`,
+        tensor: { semantic_dim: embeddings.length, context_depth: context.length, activation_level: 1 },
+        context,
+      },
+    ],
+    activation_log: [
+      {
+        timestamp: Date.now(),
+        pattern: 'memory_activation',
+        weight: 1.0,
+      },
+    ],
   };
 }
 
-// Task Orchestration Functions  
+// Task Orchestration Functions
 export function initializeTaskOrchestrator(): TaskOrchestrator {
   return {
     bolt_adapter: {
       repo_spawn_logic: 'hypergraph_primitive_spawning',
-      hypergraph_primitives: ['vertex', 'edge', 'membrane', 'bridge']
+      hypergraph_primitives: ['vertex', 'edge', 'membrane', 'bridge'],
     },
     orchestration_tensor: PERSONA_CONFIG.task.orchestration_tensor,
-    active_repos: []
+    active_repos: [],
   };
 }
 
@@ -1137,12 +1140,12 @@ export function initializeAutonomySystem(): AutonomySystem {
   return {
     self_monitoring: {
       ecan_feedback: PERSONA_CONFIG.autonomy.feedback_tensor,
-      adaptation_weights: PERSONA_TRAITS.map(t => t.cognitive_weight)
+      adaptation_weights: PERSONA_TRAITS.map((t) => t.cognitive_weight),
     },
     recursive_spawning: {
       spawn_triggers: ['parallel_request', 'complexity_threshold', 'distributed_need'],
-      modification_patterns: ['tensor_reshape', 'trait_reweight', 'kernel_expansion']
-    }
+      modification_patterns: ['tensor_reshape', 'trait_reweight', 'kernel_expansion'],
+    },
   };
 }
 
@@ -1150,21 +1153,26 @@ export function initializeAutonomySystem(): AutonomySystem {
 export function processNeuralSymbolic(input: string, context: string): string {
   const intent = parseIntent(input);
   const oodaResponse = generateOODAResponse(input, context);
-  
+
   return `
     Intent Analysis: ${JSON.stringify(intent)}
     ${oodaResponse}
     
     Cognitive Processing Pipeline:
     1. Semantic Vector Embedding: [${input.length}, ${context.length}, ${intent.tensor_activation.pattern_dim}]
-    2. Trait Activation: ${PERSONA_TRAITS.filter(t => t.cognitive_weight > 0.8).map(t => t.name).join(', ')}
+    2. Trait Activation: ${PERSONA_TRAITS.filter((t) => t.cognitive_weight > 0.8)
+      .map((t) => t.name)
+      .join(', ')}
     3. Memory Kernel Status: Active
     4. Spawn Readiness: ${intent.spawn_trigger ? 'ENABLED' : 'STANDBY'}
   `;
 }
 
 // Recursive Self-Modification Loop with ECAN Feedback
-export function selfModificationLoop(systemState: any, performanceMetrics: Array<number>): {
+export function selfModificationLoop(
+  systemState: any,
+  performanceMetrics: Array<number>,
+): {
   modified_traits: Array<PersonaTrait>;
   tensor_reshapes: Array<TensorShape>;
   spawn_decisions: Array<string>;
@@ -1174,9 +1182,9 @@ export function selfModificationLoop(systemState: any, performanceMetrics: Array
   }, 0);
 
   // Adaptive trait reweighting based on ECAN feedback
-  const modified_traits = PERSONA_TRAITS.map(trait => ({
+  const modified_traits = PERSONA_TRAITS.map((trait) => ({
     ...trait,
-    cognitive_weight: Math.max(0.1, Math.min(1.0, trait.cognitive_weight + (ecanFeedback * 0.01)))
+    cognitive_weight: Math.max(0.1, Math.min(1.0, trait.cognitive_weight + ecanFeedback * 0.01)),
   }));
 
   // Dynamic tensor reshaping for optimal cognitive expressivity
@@ -1184,8 +1192,11 @@ export function selfModificationLoop(systemState: any, performanceMetrics: Array
     {
       semantic_dim: Math.floor(PERSONA_CONFIG.memory.semantic_embeddings.semantic_dim! * (1 + ecanFeedback * 0.05)),
       context_depth: PERSONA_CONFIG.memory.semantic_embeddings.context_depth,
-      activation_level: Math.max(32, PERSONA_CONFIG.memory.semantic_embeddings.activation_level! + Math.floor(ecanFeedback * 10))
-    }
+      activation_level: Math.max(
+        32,
+        PERSONA_CONFIG.memory.semantic_embeddings.activation_level! + Math.floor(ecanFeedback * 10),
+      ),
+    },
   ];
 
   // Spawn decision logic based on system complexity
@@ -1194,38 +1205,47 @@ export function selfModificationLoop(systemState: any, performanceMetrics: Array
   return {
     modified_traits,
     tensor_reshapes,
-    spawn_decisions
+    spawn_decisions,
   };
 }
 
 // AtomSpace-inspired Pattern Matching for OpenCog Integration
-export function atomSpacePatternMatch(query: string, knowledge_base: Array<string>): {
+export function atomSpacePatternMatch(
+  query: string,
+  knowledge_base: Array<string>,
+): {
   patterns: Array<{ atom: string; strength: number; confidence: number }>;
   inference_chains: Array<string>;
 } {
   // Simplified AtomSpace pattern matching logic
-  const patterns = knowledge_base.map(atom => ({
-    atom,
-    strength: Math.random() * 0.9 + 0.1, // Simulated truth value strength
-    confidence: Math.random() * 0.8 + 0.2 // Simulated truth value confidence
-  })).filter(pattern => pattern.atom.toLowerCase().includes(query.toLowerCase()));
+  const patterns = knowledge_base
+    .map((atom) => ({
+      atom,
+      strength: Math.random() * 0.9 + 0.1, // Simulated truth value strength
+      confidence: Math.random() * 0.8 + 0.2, // Simulated truth value confidence
+    }))
+    .filter((pattern) => pattern.atom.toLowerCase().includes(query.toLowerCase()));
 
-  const inference_chains = patterns.length > 0 ? 
-    [`Inference: ${patterns[0].atom} -> ${query} [${patterns[0].strength.toFixed(2)}]`] : 
-    ['No inference chains found'];
+  const inference_chains =
+    patterns.length > 0
+      ? [`Inference: ${patterns[0].atom} -> ${query} [${patterns[0].strength.toFixed(2)}]`]
+      : ['No inference chains found'];
 
   return { patterns, inference_chains };
 }
 
 // P-System Membrane Computing for Cognitive Boundaries
-export function pSystemMembraneProcessor(input: string, membrane_rules: Array<string>): {
+export function pSystemMembraneProcessor(
+  input: string,
+  membrane_rules: Array<string>,
+): {
   processed_symbols: Array<string>;
   membrane_transitions: Array<string>;
   cognitive_boundaries: Array<{ level: number; symbols: Array<string> }>;
 } {
-  const symbols = input.split(' ').filter(s => s.length > 0);
-  
-  const processed_symbols = symbols.map(symbol => {
+  const symbols = input.split(' ').filter((s) => s.length > 0);
+
+  const processed_symbols = symbols.map((symbol) => {
     // Apply membrane rewriting rules
     return membrane_rules.reduce((processed, rule) => {
       return processed.replace(new RegExp(rule.split('->')[0], 'g'), rule.split('->')[1] || '');
@@ -1234,19 +1254,19 @@ export function pSystemMembraneProcessor(input: string, membrane_rules: Array<st
 
   const membrane_transitions = [
     'skin_membrane -> inner_membrane',
-    'inner_membrane -> nucleus_membrane', 
-    'nucleus_membrane -> cognitive_core'
+    'inner_membrane -> nucleus_membrane',
+    'nucleus_membrane -> cognitive_core',
   ];
 
   const cognitive_boundaries = [
     { level: 0, symbols: symbols.slice(0, 2) },
     { level: 1, symbols: processed_symbols.slice(0, 3) },
-    { level: 2, symbols: processed_symbols.slice(-2) }
+    { level: 2, symbols: processed_symbols.slice(-2) },
   ];
 
   return {
     processed_symbols,
     membrane_transitions,
-    cognitive_boundaries
+    cognitive_boundaries,
   };
 }

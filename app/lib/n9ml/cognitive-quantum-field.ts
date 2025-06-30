@@ -3,7 +3,7 @@ import { parsePath, optimizeQuantization, collapseQuantumField } from './utils';
 
 /**
  * CognitiveQuantumField - Where quantization meets namespaces meets cognition
- * 
+ *
  * All possible architectures exist in superposition until a Plan 9 namespace
  * path collapses the field to a specific tensor configuration.
  */
@@ -22,17 +22,17 @@ export class CognitiveQuantumField {
   mount(path: string): Tensor {
     // Parse intent from path
     const intent = parsePath(path);
-    
+
     // Determine optimal quantization for this intent
     const quant = optimizeQuantization(intent);
-    
+
     // Collapse to specific architecture
     const arch = collapseQuantumField(intent, quant);
-    
+
     // Create and mount tensor with appropriate precision
     const tensor = this.createTensor(arch, quant, path);
     this.mountedTensors[path] = tensor;
-    
+
     return tensor;
   }
 
@@ -44,11 +44,11 @@ export class CognitiveQuantumField {
     const newIntent = parsePath(newPath);
     const newQuant = optimizeQuantization(newIntent);
     const newArch = collapseQuantumField(newIntent, newQuant);
-    
+
     // Reinterpret the existing tensor data with new architecture and quantization
     const reinterpretedTensor = this.reinterpretTensor(data, newArch, newQuant, newPath);
     this.mountedTensors[newPath] = reinterpretedTensor;
-    
+
     return reinterpretedTensor;
   }
 
@@ -67,6 +67,7 @@ export class CognitiveQuantumField {
       delete this.mountedTensors[path];
       return true;
     }
+
     return false;
   }
 
@@ -79,41 +80,41 @@ export class CognitiveQuantumField {
 
   private initializeQuantumStates(): void {
     // Vision domain states
-    this.quantumStates['vision'] = [
-      { 
+    this.quantumStates.vision = [
+      {
         architecture: { type: 'cnn', layers: 12, parameters: 25000000, optimization: 'speed' },
         quantization: { bits: 8, method: 'linear', preserveAccuracy: false },
-        probability: 0.3
+        probability: 0.3,
       },
-      { 
+      {
         architecture: { type: 'cnn', layers: 18, parameters: 60000000, optimization: 'accuracy' },
         quantization: { bits: 32, method: 'adaptive', preserveAccuracy: true },
-        probability: 0.4
+        probability: 0.4,
       },
-      { 
+      {
         architecture: { type: 'hybrid', layers: 24, parameters: 150000000, optimization: 'memory' },
         quantization: { bits: 16, method: 'dynamic', preserveAccuracy: true },
-        probability: 0.3
-      }
+        probability: 0.3,
+      },
     ];
 
-    // NLP domain states  
-    this.quantumStates['nlp'] = [
-      { 
+    // NLP domain states
+    this.quantumStates.nlp = [
+      {
         architecture: { type: 'transformer', layers: 12, parameters: 110000000, optimization: 'speed' },
         quantization: { bits: 16, method: 'dynamic', preserveAccuracy: true },
-        probability: 0.5
+        probability: 0.5,
       },
-      { 
+      {
         architecture: { type: 'transformer', layers: 24, parameters: 340000000, optimization: 'accuracy' },
         quantization: { bits: 32, method: 'adaptive', preserveAccuracy: true },
-        probability: 0.3
+        probability: 0.3,
       },
-      { 
+      {
         architecture: { type: 'hybrid', layers: 36, parameters: 1300000000, optimization: 'memory' },
         quantization: { bits: 16, method: 'adaptive', preserveAccuracy: true },
-        probability: 0.2
-      }
+        probability: 0.2,
+      },
     ];
   }
 
@@ -121,7 +122,7 @@ export class CognitiveQuantumField {
     // Determine data type based on quantization
     let dtype: 'float32' | 'uint8' | 'uint16';
     let data: Float32Array | Uint8Array | Uint16Array;
-    
+
     if (quantization.bits === 32) {
       dtype = 'float32';
       data = new Float32Array(1024); // Example size
@@ -144,11 +145,16 @@ export class CognitiveQuantumField {
       shape: [32, 32], // Example shape
       dtype,
       architecture,
-      quantization
+      quantization,
     };
   }
 
-  private reinterpretTensor(originalTensor: Tensor, newArchitecture: Architecture, newQuantization: QuantizationStrategy, newPath: string): Tensor {
+  private reinterpretTensor(
+    originalTensor: Tensor,
+    newArchitecture: Architecture,
+    newQuantization: QuantizationStrategy,
+    newPath: string,
+  ): Tensor {
     // The key insight: reinterpret the same underlying data with different precision/architecture
     let reinterpretedData: Float32Array | Uint8Array | Uint16Array;
     let dtype: 'float32' | 'uint8' | 'uint16';
@@ -157,13 +163,16 @@ export class CognitiveQuantumField {
     if (newQuantization.bits === 32 && originalTensor.dtype !== 'float32') {
       dtype = 'float32';
       reinterpretedData = new Float32Array(originalTensor.data.length);
+
       const maxVal = originalTensor.dtype === 'uint16' ? 65535 : 255;
+
       for (let i = 0; i < originalTensor.data.length; i++) {
         reinterpretedData[i] = originalTensor.data[i] / maxVal;
       }
     } else if (newQuantization.bits === 16 && originalTensor.dtype !== 'uint16') {
       dtype = 'uint16';
       reinterpretedData = new Uint16Array(originalTensor.data.length);
+
       if (originalTensor.dtype === 'float32') {
         for (let i = 0; i < originalTensor.data.length; i++) {
           reinterpretedData[i] = Math.round((originalTensor.data[i] as number) * 65535);
@@ -177,6 +186,7 @@ export class CognitiveQuantumField {
     } else if (newQuantization.bits === 8 && originalTensor.dtype !== 'uint8') {
       dtype = 'uint8';
       reinterpretedData = new Uint8Array(originalTensor.data.length);
+
       if (originalTensor.dtype === 'float32') {
         for (let i = 0; i < originalTensor.data.length; i++) {
           reinterpretedData[i] = Math.round((originalTensor.data[i] as number) * 255);
@@ -199,7 +209,7 @@ export class CognitiveQuantumField {
       shape: originalTensor.shape, // Keep same shape
       dtype,
       architecture: newArchitecture,
-      quantization: newQuantization
+      quantization: newQuantization,
     };
   }
 }

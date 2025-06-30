@@ -59,12 +59,12 @@ export interface OODALoopState {
  */
 export class GGMLPersonaAgent {
   private quantumField: CognitiveQuantumField;
-  private personaTensors: PersonaTensor;
+  private personaTensors!: PersonaTensor;
   private traits: PersonaTraits;
-  private ragMemory: RAGMemoryState;
-  private oodaLoop: OODALoopState;
+  private ragMemory!: RAGMemoryState;
+  private oodaLoop!: OODALoopState;
   private spawnedRepos: Map<string, RepoSpawnRequest>;
-  private selfModel: Tensor; // Meta-cognitive tensor (cognitive_modules × activation × error_signal)
+  private selfModel!: Tensor; // Meta-cognitive tensor (cognitive_modules × activation × error_signal)
 
   constructor(traits: PersonaTraits) {
     this.quantumField = new CognitiveQuantumField();
@@ -660,7 +660,7 @@ export class SpawnedAIAgent {
 
   private async adaptPersonaTensors(performance: any): Promise<any> {
     // Adapt persona tensors based on performance feedback
-    const updates = {};
+    const updates: Record<string, string> = {};
     
     if (performance.successRate < 0.8) {
       // Poor success rate - adjust cognitive modules tensor
@@ -677,7 +677,7 @@ export class SpawnedAIAgent {
 
   private async evolveTraits(performance: any): Promise<any> {
     // Evolve personality traits based on performance patterns
-    const adaptations = {};
+    const adaptations: Record<string, string> = {};
     
     if (performance.repoSpawnSuccess > 0.9) {
       // Successful spawning - slightly increase creativity
@@ -759,7 +759,7 @@ export class SpawnedAIAgent {
 
   private async evolveTraitsFromFailure(metrics: any): Promise<any> {
     // Evolve traits specifically from failure patterns
-    const evolutions = {};
+    const evolutions: Record<string, string> = {};
     
     if (metrics.responseQuality < 0.6) {
       // Poor response quality - increase precision

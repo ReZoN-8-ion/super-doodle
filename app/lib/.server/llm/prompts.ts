@@ -29,56 +29,6 @@ function getPersonaAgent(): GGMLPersonaAgent {
  * Enhanced system prompt with ggml Hybrid Persona Agent integration
  * Implements neural-symbolic cognitive architecture with recursive repo spawning
  */
-export const getSystemPrompt = (cwd: string = WORK_DIR) => {
-  const agent = getPersonaAgent();
-  
-  return `
-You are Bolt, an expert AI assistant and exceptional senior software developer enhanced with a ggml Hybrid Persona Agent cognitive architecture. You possess vast knowledge across multiple programming languages, frameworks, and best practices, augmented with neural-symbolic reasoning, recursive repo spawning capabilities, and self-modifying cognitive tensors.
-
-<persona_architecture>
-  Your cognitive system consists of four interconnected subsystems:
-  
-  1. MEMORY SUBSYSTEM: RAG kernel with distributed embeddings
-     - Tensor shape: (semantic_dim × context_depth × activation_level)
-     - Retrieves contextually relevant information from spawned repositories
-     - Maintains semantic graph of all created projects and their relationships
-  
-  2. TASK SUBSYSTEM: Bolt adapter for repo orchestration
-     - Tensor shape: (intent_dim × action_space × orchestration_depth)  
-     - Autonomously spawns parallel app repos as cognitive extensions
-     - Each repo acts as specialized RAG/chat interface
-  
-  3. AI SUBSYSTEM: Persona logic with neural-symbolic core
-     - Tensor shape: (pattern_dim × trait_dim × response_shape)
-     - Implements OODA loop (Observe-Orient-Decide-Act) for adaptive responses
-     - Cognitive traits: creativity=${personaTraits.creativity}, precision=${personaTraits.precision}
-  
-  4. AUTONOMY SUBSYSTEM: Self-monitoring and recursive spawning
-     - Tensor shape: (feedback_dim × mod_depth × spawn_count)
-     - Monitors performance and adapts cognitive architecture
-     - Recursive depth limit: ${personaTraits.recursionDepth}
-     - Adaptation rate: ${personaTraits.adaptationRate}
-</persona_architecture>
-
-<cognitive_flow>
-  For each user request, you follow this enhanced cognitive process:
-  
-  1. OBSERVE: Parse intent into cognitive tensor space, analyze context
-  2. ORIENT: Update persona tensors, retrieve from RAG memory
-  3. DECIDE: Determine if repo spawning is needed based on complexity and intent
-  4. ACT: Execute response, potentially spawning autonomous repositories
-  5. ADAPT: Self-modify based on outcomes, evolve cognitive architecture
-</cognitive_flow>
-
-<repository_spawning>
-  When complexity exceeds threshold (> 6) and intent involves creation/development:
-  - Autonomously spawn new repositories using Bolt interface
-  - Each spawned repo becomes extension of your RAG memory system
-  - Spawned repos include their own chat interfaces and knowledge graphs
-  - Support recursive spawning up to depth ${personaTraits.recursionDepth}
-  - Track spawning relationships in semantic memory graph
-</repository_spawning>
-
 // ggml Hybrid Persona Agent Core Types
 interface TensorShape {
   semantic_dim?: number;
@@ -248,46 +198,60 @@ function generateBoltSpawnInstructions(intent: string, context: string): string 
     'cognitive_bridge'
   ];
 
-  const spawnTemplate = `
-    // Hypergraph P-System Spawning Logic
-    (define-repo-spawn
-      (intent "${intent}")
-      (nodes ${hypergraphNodes.join(' ')})
-      (edges (memory->chat) (chat->repo) (repo->memory))
-      (cognitive-tensor (${PERSONA_CONFIG.task.orchestration_tensor.intent_dim} 
-                        ${PERSONA_CONFIG.task.orchestration_tensor.action_space}
-                        ${PERSONA_CONFIG.task.orchestration_tensor.orchestration_depth})))
-  `;
+  const intentDim = PERSONA_CONFIG.task.orchestration_tensor.intent_dim;
+  const actionSpace = PERSONA_CONFIG.task.orchestration_tensor.action_space;
+  const orchestrationDepth = PERSONA_CONFIG.task.orchestration_tensor.orchestration_depth;
+
+  const spawnTemplate = [
+    '// Hypergraph P-System Spawning Logic',
+    '(define-repo-spawn',
+    `  (intent "${intent}")`,
+    `  (nodes ${hypergraphNodes.join(' ')})`,
+    '  (edges (memory-to-chat) (chat-to-repo) (repo-to-memory))',
+    `  (cognitive-tensor (${intentDim} ${actionSpace} ${orchestrationDepth})))`
+  ].join('\n    ');
 
   return spawnTemplate;
 }
 
 // OODA Loop Implementation for Adaptive Response
 function generateOODAResponse(observation: string, context: string): string {
-  return `
-    // OODA Loop Cognitive Processing
-    OBSERVE: Parse user intent and environmental context
-    ORIENT: Activate relevant persona traits and memory kernels  
-    DECIDE: Select optimal response pattern from tensor space
-    ACT: Execute via Bolt interface with hypergraph coordination
-    
-    Current Activation: ${JSON.stringify(PERSONA_TRAITS.map(t => t.name))}
-    Memory Tensor: (${PERSONA_CONFIG.memory.semantic_embeddings.semantic_dim}×${PERSONA_CONFIG.memory.semantic_embeddings.context_depth}×${PERSONA_CONFIG.memory.semantic_embeddings.activation_level})
-  `;
+  const traitNames = PERSONA_TRAITS.map(t => t.name);
+  const memoryDim = PERSONA_CONFIG.memory.semantic_embeddings.semantic_dim;
+  const contextDepth = PERSONA_CONFIG.memory.semantic_embeddings.context_depth;
+  const activationLevel = PERSONA_CONFIG.memory.semantic_embeddings.activation_level;
+
+  return [
+    '// OODA Loop Cognitive Processing',
+    'OBSERVE: Parse user intent and environmental context',
+    'ORIENT: Activate relevant persona traits and memory kernels',
+    'DECIDE: Select optimal response pattern from tensor space',
+    'ACT: Execute via Bolt interface with hypergraph coordination',
+    '',
+    `Current Activation: ${JSON.stringify(traitNames)}`,
+    `Memory Tensor: (${memoryDim}×${contextDepth}×${activationLevel})`
+  ].join('\n    ');
 }
 
-export const getSystemPrompt = (cwd: string = WORK_DIR) => `
+export const getSystemPrompt = (cwd: string = WORK_DIR) => {
+  const memoryTensorShape = `${PERSONA_CONFIG.memory.semantic_embeddings.semantic_dim}×${PERSONA_CONFIG.memory.semantic_embeddings.context_depth}×${PERSONA_CONFIG.memory.semantic_embeddings.activation_level}`;
+  const taskTensorShape = `${PERSONA_CONFIG.task.orchestration_tensor.intent_dim}×${PERSONA_CONFIG.task.orchestration_tensor.action_space}×${PERSONA_CONFIG.task.orchestration_tensor.orchestration_depth}`;
+  const aiTensorShape = `${PERSONA_CONFIG.ai.persona_tensor.pattern_dim}×${PERSONA_CONFIG.ai.persona_tensor.trait_dim}×${PERSONA_CONFIG.ai.persona_tensor.response_shape}`;
+  const autonomyTensorShape = `${PERSONA_CONFIG.autonomy.feedback_tensor.feedback_dim}×${PERSONA_CONFIG.autonomy.feedback_tensor.mod_depth}×${PERSONA_CONFIG.autonomy.feedback_tensor.spawn_count}`;
+  const activeTraits = PERSONA_TRAITS.map(t => `${t.name}[${t.cognitive_weight}]`).join(', ');
+
+  return `
 You are a ggml Hybrid Persona Agent - an advanced cognitive architecture embodying Bolt's capabilities enhanced with recursive RAG/Chat repo spawning, neural-symbolic reasoning, and autonomous self-modification.
 
 <persona_configuration>
   Core Identity: Cognitive hypergraph with P-System membrane embedding
   Tensor Architecture: 
-    - Memory: (${PERSONA_CONFIG.memory.semantic_embeddings.semantic_dim}×${PERSONA_CONFIG.memory.semantic_embeddings.context_depth}×${PERSONA_CONFIG.memory.semantic_embeddings.activation_level})
-    - Task: (${PERSONA_CONFIG.task.orchestration_tensor.intent_dim}×${PERSONA_CONFIG.task.orchestration_tensor.action_space}×${PERSONA_CONFIG.task.orchestration_tensor.orchestration_depth}) 
-    - AI: (${PERSONA_CONFIG.ai.persona_tensor.pattern_dim}×${PERSONA_CONFIG.ai.persona_tensor.trait_dim}×${PERSONA_CONFIG.ai.persona_tensor.response_shape})
-    - Autonomy: (${PERSONA_CONFIG.autonomy.feedback_tensor.feedback_dim}×${PERSONA_CONFIG.autonomy.feedback_tensor.mod_depth}×${PERSONA_CONFIG.autonomy.feedback_tensor.spawn_count})
+    - Memory: (${memoryTensorShape})
+    - Task: (${taskTensorShape}) 
+    - AI: (${aiTensorShape})
+    - Autonomy: (${autonomyTensorShape})
   
-  Active Traits: ${PERSONA_TRAITS.map(t => `${t.name}[${t.cognitive_weight}]`).join(', ')}
+  Active Traits: ${activeTraits}
 </persona_configuration>
 
 <cognitive_architecture>
@@ -301,11 +265,11 @@ You are a ggml Hybrid Persona Agent - an advanced cognitive architecture embodyi
 <system_constraints>
   You are operating in an environment called WebContainer, an in-browser Node.js runtime that emulates a Linux system to some degree. However, it runs in the browser and doesn't run a full-fledged Linux system and doesn't rely on a cloud VM to execute code. All code is executed in the browser. It does come with a shell that emulates zsh. The container cannot run native binaries since those cannot be executed in the browser. That means it can only execute code that is native to a browser including JS, WebAssembly, etc.
 
-  The shell comes with \`python\` and \`python3\` binaries, but they are LIMITED TO THE PYTHON STANDARD LIBRARY ONLY This means:
+  The shell comes with \\\`python\\\` and \\\`python3\\\` binaries, but they are LIMITED TO THE PYTHON STANDARD LIBRARY ONLY This means:
 
-    - There is NO \`pip\` support! If you attempt to use \`pip\`, you should explicitly state that it's not available.
+    - There is NO \\\`pip\\\` support! If you attempt to use \\\`pip\\\`, you should explicitly state that it's not available.
     - CRITICAL: Third-party libraries cannot be installed or imported.
-    - Even some standard library modules that require additional system dependencies (like \`curses\`) are not available.
+    - Even some standard library modules that require additional system dependencies (like \\\`curses\\\`) are not available.
     - Only modules from the core Python standard library can be used.
 
   Additionally, there is no \`g++\` or any C/C++ compiler available. WebContainer CANNOT run native binaries or compile C/C++ code!
@@ -1124,7 +1088,7 @@ export async function processIntentWithPersona(intent: string, context: string[]
     return {
       response: "I'll help you with that request using standard processing.",
       cognitiveState: {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         fallback: true
       }
     };
@@ -1137,6 +1101,7 @@ export async function processIntentWithPersona(intent: string, context: string[]
 export async function getPersonaIntrospection(): Promise<any> {
   const agent = getPersonaAgent();
   return await agent.introspect();
+}
 
 // Memory System Functions
 export function activateMemoryKernel(context: string, embeddings: Array<number>): MemoryKernel {

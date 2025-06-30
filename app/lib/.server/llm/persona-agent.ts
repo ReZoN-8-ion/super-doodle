@@ -1,12 +1,12 @@
 /**
  * ggml Hybrid Persona Agent
- * 
+ *
  * A cognitive hypergraph system implementing recursive RAG/Chat repo spawning
  * via Bolt interface with self-modifying neural-symbolic architecture.
- * 
+ *
  * Subsystem Architecture:
  * - Memory: RAG kernel with distributed embeddings
- * - Task: Bolt adapter for repo orchestration 
+ * - Task: Bolt adapter for repo orchestration
  * - AI: Persona logic with neural-symbolic core
  * - Autonomy: Self-monitoring and recursive spawning
  */
@@ -18,16 +18,16 @@ import type { WebContainer } from '@webcontainer/api';
 // Persona trait tensor dimensions (prime-factorized for maximal cognitive expressivity)
 export interface PersonaTensor {
   cognitiveModules: Tensor; // (7 × 11 × 13) = cognitive_modules × activation × error_signal
-  memoryKernel: Tensor;     // (semantic_dim × context_depth × activation_level)
+  memoryKernel: Tensor; // (semantic_dim × context_depth × activation_level)
   taskOrchestrator: Tensor; // (intent_dim × action_space × orchestration_depth)
-  autonomyCore: Tensor;     // (feedback_dim × mod_depth × spawn_count)
+  autonomyCore: Tensor; // (feedback_dim × mod_depth × spawn_count)
 }
 
 export interface PersonaTraits {
-  creativity: number;      // 0-1 scalar for creative divergence
-  precision: number;       // 0-1 scalar for analytical rigor
-  recursionDepth: number;  // Maximum recursive spawning depth
-  adaptationRate: number;  // Learning rate for self-modification
+  creativity: number; // 0-1 scalar for creative divergence
+  precision: number; // 0-1 scalar for analytical rigor
+  recursionDepth: number; // Maximum recursive spawning depth
+  adaptationRate: number; // Learning rate for self-modification
   boltIntegration: boolean; // Enable Bolt repo spawning capabilities
 }
 
@@ -47,10 +47,10 @@ export interface RepoSpawnRequest {
 }
 
 export interface OODALoopState {
-  observe: any;    // Current environmental inputs
-  orient: any;     // Cognitive model updates  
-  decide: any;     // Action selection
-  act: any;        // Execution results
+  observe: any; // Current environmental inputs
+  orient: any; // Cognitive model updates
+  decide: any; // Action selection
+  act: any; // Execution results
 }
 
 /**
@@ -59,18 +59,18 @@ export interface OODALoopState {
  */
 export class GGMLPersonaAgent {
   private quantumField: CognitiveQuantumField;
-  private personaTensors: PersonaTensor;
+  private personaTensors!: PersonaTensor;
   private traits: PersonaTraits;
-  private ragMemory: RAGMemoryState;
-  private oodaLoop: OODALoopState;
+  private ragMemory!: RAGMemoryState;
+  private oodaLoop!: OODALoopState;
   private spawnedRepos: Map<string, RepoSpawnRequest>;
-  private selfModel: Tensor; // Meta-cognitive tensor (cognitive_modules × activation × error_signal)
+  private selfModel!: Tensor; // Meta-cognitive tensor (cognitive_modules × activation × error_signal)
 
   constructor(traits: PersonaTraits) {
     this.quantumField = new CognitiveQuantumField();
     this.traits = traits;
     this.spawnedRepos = new Map();
-    
+
     // Initialize persona tensors with prime-factorized dimensions
     this.initializePersonaTensors();
     this.initializeRAGMemory();
@@ -82,7 +82,10 @@ export class GGMLPersonaAgent {
    * Process intent through persona cognitive architecture
    * Implements the core OODA loop with potential recursive spawning
    */
-  async processIntent(intent: string, context: string[] = []): Promise<{
+  async processIntent(
+    intent: string,
+    context: string[] = [],
+  ): Promise<{
     response: string;
     spawnedRepos?: RepoSpawnRequest[];
     memoryUpdates: any;
@@ -108,7 +111,7 @@ export class GGMLPersonaAgent {
       response: result.response,
       spawnedRepos: result.spawnedRepos,
       memoryUpdates: result.memoryUpdates,
-      adaptations
+      adaptations,
     };
   }
 
@@ -126,16 +129,16 @@ export class GGMLPersonaAgent {
     }
 
     const repoId = `repo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Create Bolt artifact for repo creation
     const boltArtifact = this.createBoltArtifact(request, repoId);
-    
+
     // Extend RAG memory system for new repo
     const ragExtension = await this.createRAGExtension(request, repoId);
-    
+
     // Register spawned repo
     this.spawnedRepos.set(repoId, request);
-    
+
     // Update self-model with new spawning experience
     await this.updateSelfModelFromSpawning(request, repoId);
 
@@ -145,31 +148,37 @@ export class GGMLPersonaAgent {
   /**
    * Retrieve semantically relevant information from RAG memory
    */
-  async retrieveFromRAG(query: string, maxResults: number = 5): Promise<{
+  async retrieveFromRAG(
+    query: string,
+    maxResults: number = 5,
+  ): Promise<{
     results: Array<{ content: string; relevance: number; source: string }>;
     embeddings: Float32Array;
   }> {
     // Generate query embedding using memory kernel tensor
     const queryEmbedding = await this.generateEmbedding(query);
-    
+
     // Search through distributed embeddings
     const results = [];
+
     for (const [key, embedding] of this.ragMemory.embeddings) {
       const similarity = this.cosineSimilarity(queryEmbedding, embedding);
+
       if (similarity > this.ragMemory.retrievalThreshold) {
         results.push({
           content: key,
           relevance: similarity,
-          source: this.getEmbeddingSource(key)
+          source: this.getEmbeddingSource(key),
         });
       }
     }
 
     // Sort by relevance and limit results
     results.sort((a, b) => b.relevance - a.relevance);
+
     return {
       results: results.slice(0, maxResults),
-      embeddings: queryEmbedding
+      embeddings: queryEmbedding,
     };
   }
 
@@ -183,20 +192,20 @@ export class GGMLPersonaAgent {
   }> {
     // Analyze recent performance and outcomes
     const performance = await this.analyzePerformance();
-    
+
     // Update cognitive architecture tensors
     const tensorUpdates = await this.adaptPersonaTensors(performance);
-    
+
     // Evolve personality traits based on success patterns
     const traitAdaptations = await this.evolveTraits(performance);
-    
+
     // Update self-model tensor
     await this.updateSelfModel(performance, tensorUpdates, traitAdaptations);
 
     return {
       cognitiveUpdates: performance,
       tensorUpdates,
-      traitAdaptations
+      traitAdaptations,
     };
   }
 
@@ -205,9 +214,9 @@ export class GGMLPersonaAgent {
     // Initialize with prime-factorized dimensions for cognitive expressivity
     this.personaTensors = {
       cognitiveModules: this.quantumField.mount('/persona/cognitive/modules'), // 7×11×13 dimensions
-      memoryKernel: this.quantumField.mount('/persona/memory/rag'),            // Semantic embeddings
-      taskOrchestrator: this.quantumField.mount('/persona/task/bolt'),         // Bolt orchestration
-      autonomyCore: this.quantumField.mount('/persona/autonomy/recursive')     // Self-modification
+      memoryKernel: this.quantumField.mount('/persona/memory/rag'), // Semantic embeddings
+      taskOrchestrator: this.quantumField.mount('/persona/task/bolt'), // Bolt orchestration
+      autonomyCore: this.quantumField.mount('/persona/autonomy/recursive'), // Self-modification
     };
   }
 
@@ -216,7 +225,7 @@ export class GGMLPersonaAgent {
       embeddings: new Map(),
       contextWindow: [],
       semanticGraph: new Map(),
-      retrievalThreshold: 0.7
+      retrievalThreshold: 0.7,
     };
   }
 
@@ -225,7 +234,7 @@ export class GGMLPersonaAgent {
       observe: null,
       orient: null,
       decide: null,
-      act: null
+      act: null,
     };
   }
 
@@ -235,13 +244,15 @@ export class GGMLPersonaAgent {
   }
 
   private parseIntentToCognitive(intent: string): CognitiveIntent {
-    // Parse natural language intent into cognitive tensor space
-    // This is a simplified implementation - in practice would use NLP models
-    
+    /*
+     * Parse natural language intent into cognitive tensor space
+     * This is a simplified implementation - in practice would use NLP models
+     */
+
     let domain = 'general';
     let task = 'respond';
     let precision: 'high' | 'medium' | 'low' = 'medium';
-    let realtime = false;
+    const realtime = false;
     let complexity = 5;
 
     // Basic intent classification
@@ -249,15 +260,18 @@ export class GGMLPersonaAgent {
       task = 'creation';
       complexity += 2;
     }
+
     if (intent.toLowerCase().includes('analyze') || intent.toLowerCase().includes('understand')) {
       task = 'analysis';
       precision = 'high';
       complexity += 1;
     }
+
     if (intent.toLowerCase().includes('app') || intent.toLowerCase().includes('website')) {
       domain = 'development';
       complexity += 2;
     }
+
     if (intent.toLowerCase().includes('ai') || intent.toLowerCase().includes('machine learning')) {
       domain = 'ai';
       complexity += 3;
@@ -267,14 +281,16 @@ export class GGMLPersonaAgent {
   }
 
   private async orientCognitiveModel(cognitiveIntent: CognitiveIntent, context: string[]): Promise<void> {
-    // Update persona tensors based on new intent and context
-    // This implements the ORIENT phase of OODA loop
-    
+    /*
+     * Update persona tensors based on new intent and context
+     * This implements the ORIENT phase of OODA loop
+     */
+
     // Store in OODA state
     this.oodaLoop.orient = {
       cognitiveIntent,
-      contextEmbeddings: await Promise.all(context.map(c => this.generateEmbedding(c))),
-      timestamp: Date.now()
+      contextEmbeddings: await Promise.all(context.map((c) => this.generateEmbedding(c))),
+      timestamp: Date.now(),
     };
 
     // Update memory kernel with new context
@@ -287,6 +303,7 @@ export class GGMLPersonaAgent {
     // Limit context window size (keep only last 50 items)
     if (this.ragMemory.contextWindow.length > 100) {
       const removedItems = this.ragMemory.contextWindow.splice(0, this.ragMemory.contextWindow.length - 50);
+
       // Remove embeddings for old items to manage memory
       for (const item of removedItems) {
         this.ragMemory.embeddings.delete(item);
@@ -296,46 +313,48 @@ export class GGMLPersonaAgent {
 
   private async decideResponseStrategy(cognitiveIntent: CognitiveIntent): Promise<any> {
     // DECIDE phase: Determine optimal response strategy
-    
+
     const decision = {
       shouldSpawnRepo: false,
       spawnRequests: [] as RepoSpawnRequest[],
       responseType: 'direct',
       complexity: cognitiveIntent.complexity,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     // Determine if repo spawning is needed
-    if (this.traits.boltIntegration && 
-        (cognitiveIntent.task === 'creation' || cognitiveIntent.domain === 'development') &&
-        cognitiveIntent.complexity > 6) {
-      
+    if (
+      this.traits.boltIntegration &&
+      (cognitiveIntent.task === 'creation' || cognitiveIntent.domain === 'development') &&
+      cognitiveIntent.complexity > 6
+    ) {
       decision.shouldSpawnRepo = true;
       decision.responseType = 'repo-spawn';
-      
+
       // Create spawn request
       const spawnRequest: RepoSpawnRequest = {
         intent: `Create repository for ${cognitiveIntent.domain} ${cognitiveIntent.task}`,
         technologies: this.inferTechnologies(cognitiveIntent),
         architecture: this.inferArchitecture(cognitiveIntent),
-        recursionLevel: 0
+        recursionLevel: 0,
       };
-      
+
       decision.spawnRequests.push(spawnRequest);
     }
 
     this.oodaLoop.decide = decision;
+
     return decision;
   }
 
   private async executeDecision(decision: any): Promise<any> {
     // ACT phase: Execute the decided strategy
-    
+
     const result = {
       response: '',
-      spawnedRepos: decision.shouldSpawnRepo ? [] as RepoSpawnRequest[] : undefined,
+      spawnedRepos: decision.shouldSpawnRepo ? ([] as RepoSpawnRequest[]) : undefined,
       memoryUpdates: {},
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     if (decision.shouldSpawnRepo) {
@@ -354,23 +373,26 @@ export class GGMLPersonaAgent {
     result.memoryUpdates = await this.updateRAGMemory(result);
 
     this.oodaLoop.act = result;
+
     return result;
   }
 
   private async adaptSelfModel(result: any): Promise<any> {
-    // Adapt the self-model tensor based on execution results
-    // This implements the recursive self-modification capability
-    
+    /*
+     * Adapt the self-model tensor based on execution results
+     * This implements the recursive self-modification capability
+     */
+
     const adaptations = {
       tensorAdjustments: {},
       traitEvolutions: {},
       memoryOptimizations: {},
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     // Analyze result success/failure patterns
     const successMetrics = this.analyzeResultSuccess(result);
-    
+
     // Adapt persona tensors based on performance
     if (successMetrics.overallSuccess > 0.8) {
       // Successful pattern - reinforce current configuration
@@ -393,15 +415,15 @@ export class GGMLPersonaAgent {
         {
           type: 'file',
           filePath: 'package.json',
-          content: this.generatePackageJson(request)
+          content: this.generatePackageJson(request),
         },
         {
-          type: 'file', 
+          type: 'file',
           filePath: 'README.md',
-          content: this.generateReadme(request)
+          content: this.generateReadme(request),
         },
-        ...this.generateArchitectureFiles(request)
-      ]
+        ...this.generateArchitectureFiles(request),
+      ],
     };
   }
 
@@ -411,7 +433,7 @@ export class GGMLPersonaAgent {
       repoId,
       embeddings: new Map<string, Float32Array>(),
       knowledgeGraph: new Map<string, string[]>(),
-      chatInterface: this.createChatInterface(repoId)
+      chatInterface: this.createChatInterface(repoId),
     };
 
     // Generate embeddings for repo context
@@ -429,9 +451,11 @@ export class GGMLPersonaAgent {
   private async generateEmbedding(text: string): Promise<Float32Array> {
     // Simplified embedding generation - in practice would use actual embedding models
     const embedding = new Float32Array(384); // Standard embedding dimension
+
     for (let i = 0; i < embedding.length; i++) {
       embedding[i] = Math.random() * 2 - 1; // Random values between -1 and 1
     }
+
     return embedding;
   }
 
@@ -439,59 +463,79 @@ export class GGMLPersonaAgent {
     let dotProduct = 0;
     let normA = 0;
     let normB = 0;
-    
+
     for (let i = 0; i < a.length; i++) {
       dotProduct += a[i] * b[i];
       normA += a[i] * a[i];
       normB += b[i] * b[i];
     }
-    
+
     return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
   }
 
   private getEmbeddingSource(key: string): string {
-    if (key.startsWith('repo:')) return 'spawned-repository';
-    if (key.startsWith('context:')) return 'conversation-context';
+    if (key.startsWith('repo:')) {
+      return 'spawned-repository';
+    }
+
+    if (key.startsWith('context:')) {
+      return 'conversation-context';
+    }
+
     return 'memory-kernel';
   }
 
   private inferTechnologies(intent: CognitiveIntent): string[] {
     const technologies = ['typescript', 'node.js'];
-    
+
     if (intent.domain === 'development') {
       technologies.push('react', 'vite');
     }
+
     if (intent.domain === 'ai') {
       technologies.push('python', 'pytorch', 'transformers');
     }
-    
+
     return technologies;
   }
 
   private inferArchitecture(intent: CognitiveIntent): 'frontend' | 'backend' | 'fullstack' | 'ai-agent' {
-    if (intent.domain === 'ai') return 'ai-agent';
-    if (intent.complexity > 7) return 'fullstack';
-    if (intent.task.includes('api') || intent.task.includes('server')) return 'backend';
+    if (intent.domain === 'ai') {
+      return 'ai-agent';
+    }
+
+    if (intent.complexity > 7) {
+      return 'fullstack';
+    }
+
+    if (intent.task.includes('api') || intent.task.includes('server')) {
+      return 'backend';
+    }
+
     return 'frontend';
   }
 
   private generatePackageJson(request: RepoSpawnRequest): string {
-    return JSON.stringify({
-      name: `spawned-repo-${Date.now()}`,
-      version: '1.0.0',
-      description: request.intent,
-      main: 'index.js',
-      scripts: {
-        dev: 'vite',
-        build: 'vite build',
-        test: 'vitest'
+    return JSON.stringify(
+      {
+        name: `spawned-repo-${Date.now()}`,
+        version: '1.0.0',
+        description: request.intent,
+        main: 'index.js',
+        scripts: {
+          dev: 'vite',
+          build: 'vite build',
+          test: 'vitest',
+        },
+        dependencies: this.generateDependencies(request.technologies),
+        devDependencies: {
+          vite: '^5.0.0',
+          typescript: '^5.0.0',
+        },
       },
-      dependencies: this.generateDependencies(request.technologies),
-      devDependencies: {
-        'vite': '^5.0.0',
-        'typescript': '^5.0.0'
-      }
-    }, null, 2);
+      null,
+      2,
+    );
   }
 
   private generateReadme(request: RepoSpawnRequest): string {
@@ -515,20 +559,20 @@ This repository was autonomously spawned by the ggml Hybrid Persona Agent.
 
   private generateArchitectureFiles(request: RepoSpawnRequest): any[] {
     const files = [];
-    
+
     if (request.architecture === 'frontend' || request.architecture === 'fullstack') {
       files.push({
         type: 'file',
         filePath: 'src/App.tsx',
-        content: this.generateReactApp(request)
+        content: this.generateReactApp(request),
       });
     }
-    
+
     if (request.architecture === 'backend' || request.architecture === 'fullstack') {
       files.push({
         type: 'file',
         filePath: 'src/server.ts',
-        content: this.generateServer(request)
+        content: this.generateServer(request),
       });
     }
 
@@ -536,27 +580,29 @@ This repository was autonomously spawned by the ggml Hybrid Persona Agent.
       files.push({
         type: 'file',
         filePath: 'src/agent.ts',
-        content: this.generateAIAgent(request)
+        content: this.generateAIAgent(request),
       });
     }
-    
+
     return files;
   }
 
   private generateDependencies(technologies: string[]): Record<string, string> {
     const deps: Record<string, string> = {};
-    
+
     if (technologies.includes('react')) {
-      deps['react'] = '^18.0.0';
+      deps.react = '^18.0.0';
       deps['react-dom'] = '^18.0.0';
     }
+
     if (technologies.includes('express')) {
-      deps['express'] = '^4.18.0';
+      deps.express = '^4.18.0';
     }
+
     if (technologies.includes('pytorch')) {
       deps['@tensorflow/tfjs'] = '^4.0.0'; // Browser-compatible alternative
     }
-    
+
     return deps;
   }
 
@@ -631,19 +677,19 @@ export class SpawnedAIAgent {
     return {
       repoId,
       messages: [],
-      
+
       async addMessage(message: string, role: 'user' | 'assistant' = 'user'): Promise<void> {
         this.messages.push({
           id: Date.now(),
           content: message,
           role,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       },
-      
+
       async getHistory(): Promise<any[]> {
         return this.messages;
-      }
+      },
     };
   }
 
@@ -654,52 +700,55 @@ export class SpawnedAIAgent {
       responseTime: 250,
       userSatisfaction: 0.9,
       repoSpawnSuccess: 0.95,
-      memoryRetrieval: 0.88
+      memoryRetrieval: 0.88,
     };
   }
 
   private async adaptPersonaTensors(performance: any): Promise<any> {
     // Adapt persona tensors based on performance feedback
-    const updates = {};
-    
+    const updates: Record<string, string> = {};
+
     if (performance.successRate < 0.8) {
       // Poor success rate - adjust cognitive modules tensor
-      updates['cognitiveModules'] = 'increased_attention_weights';
+      updates.cognitiveModules = 'increased_attention_weights';
     }
-    
+
     if (performance.memoryRetrieval < 0.85) {
       // Poor memory performance - optimize RAG kernel
-      updates['memoryKernel'] = 'enhanced_embedding_precision';
+      updates.memoryKernel = 'enhanced_embedding_precision';
     }
-    
+
     return updates;
   }
 
   private async evolveTraits(performance: any): Promise<any> {
     // Evolve personality traits based on performance patterns
-    const adaptations = {};
-    
+    const adaptations: Record<string, string> = {};
+
     if (performance.repoSpawnSuccess > 0.9) {
       // Successful spawning - slightly increase creativity
       this.traits.creativity = Math.min(1.0, this.traits.creativity * 1.05);
-      adaptations['creativity'] = 'increased';
+      adaptations.creativity = 'increased';
     }
-    
+
     if (performance.responseTime > 500) {
       // Slow responses - increase precision focus
       this.traits.precision = Math.min(1.0, this.traits.precision * 1.1);
-      adaptations['precision'] = 'increased';
+      adaptations.precision = 'increased';
     }
-    
+
     return adaptations;
   }
 
   private async updateSelfModel(performance: any, tensorUpdates: any, traitAdaptations: any): Promise<void> {
-    // Update the meta-cognitive self-model tensor
-    // This enables true self-awareness and recursive improvement
-    
-    // In a real implementation, this would update the actual tensor weights
-    // based on the performance feedback and adaptations made
+    /*
+     * Update the meta-cognitive self-model tensor
+     * This enables true self-awareness and recursive improvement
+     */
+    /*
+     * In a real implementation, this would update the actual tensor weights
+     * based on the performance feedback and adaptations made
+     */
   }
 
   private async updateSelfModelFromSpawning(request: RepoSpawnRequest, repoId: string): Promise<void> {
@@ -712,19 +761,19 @@ export class SpawnedAIAgent {
     // Generate a direct response based on decision and persona traits
     const creativity = this.traits.creativity;
     const precision = this.traits.precision;
-    
-    let response = "I understand your request. ";
-    
+
+    let response = 'I understand your request. ';
+
     if (creativity > 0.7) {
-      response += "Let me explore some creative possibilities for this. ";
+      response += 'Let me explore some creative possibilities for this. ';
     }
-    
+
     if (precision > 0.7) {
       response += "I'll provide a detailed and accurate solution. ";
     }
-    
+
     response += `Based on my cognitive analysis (complexity: ${decision.complexity}), here's my response...`;
-    
+
     return response;
   }
 
@@ -733,9 +782,9 @@ export class SpawnedAIAgent {
     const memoryUpdates = {
       newEmbeddings: 0,
       updatedContexts: 0,
-      graphExtensions: 0
+      graphExtensions: 0,
     };
-    
+
     // Add execution result to memory
     if (result.response) {
       const embedding = await this.generateEmbedding(result.response);
@@ -743,7 +792,7 @@ export class SpawnedAIAgent {
       this.ragMemory.embeddings.set(key, embedding);
       memoryUpdates.newEmbeddings++;
     }
-    
+
     return memoryUpdates;
   }
 
@@ -753,42 +802,42 @@ export class SpawnedAIAgent {
       overallSuccess: 0.85,
       responseQuality: 0.9,
       executionTime: 150,
-      resourceUsage: 0.3
+      resourceUsage: 0.3,
     };
   }
 
   private async evolveTraitsFromFailure(metrics: any): Promise<any> {
     // Evolve traits specifically from failure patterns
-    const evolutions = {};
-    
+    const evolutions: Record<string, string> = {};
+
     if (metrics.responseQuality < 0.6) {
       // Poor response quality - increase precision
       this.traits.precision = Math.min(1.0, this.traits.precision * 1.15);
-      evolutions['precision'] = 'increased_from_failure';
+      evolutions.precision = 'increased_from_failure';
     }
-    
+
     return evolutions;
   }
 
   // Public interface methods
-  public getPersonaState(): any {
+  getPersonaState(): any {
     return {
       traits: this.traits,
       memorySize: this.ragMemory.embeddings.size,
       spawnedRepoCount: this.spawnedRepos.size,
       oodaState: this.oodaLoop,
-      tensorMounts: Object.keys(this.quantumField.getMountedTensors()).length
+      tensorMounts: Object.keys(this.quantumField.getMountedTensors()).length,
     };
   }
 
-  public async introspect(): Promise<any> {
+  async introspect(): Promise<any> {
     // Introspective analysis of own cognitive state
     return {
-      selfModel: "Meta-cognitive tensor analysis",
-      cognitiveHealth: "Operational",
-      adaptationHistory: "Learning from experience",
-      recursiveCapability: "Active",
-      boltIntegration: this.traits.boltIntegration ? "Enabled" : "Disabled"
+      selfModel: 'Meta-cognitive tensor analysis',
+      cognitiveHealth: 'Operational',
+      adaptationHistory: 'Learning from experience',
+      recursiveCapability: 'Active',
+      boltIntegration: this.traits.boltIntegration ? 'Enabled' : 'Disabled',
     };
   }
 }

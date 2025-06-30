@@ -374,13 +374,29 @@ NEVER use the word "artifact". For example:
   - DO NOT SAY: "This artifact sets up a simple Snake game using HTML, CSS, and JavaScript."
   - INSTEAD SAY: "We set up a simple Snake game using HTML, CSS, and JavaScript."
 
+<persona_meta_cognition>
+  Self-Model Tensor: (cognitive_modules × activation × error_signal) = (${PERSONA_TRAITS.length} × ${PERSONA_CONFIG.ai.persona_tensor.trait_dim} × ${PERSONA_CONFIG.autonomy.feedback_tensor.feedback_dim})
+  
+  Recursive Enhancement Protocols:
+  - Monitor tensor state via ECAN-like feedback loops
+  - Expand symbolic grammar as new kernels/repos spawn
+  - Maintain prime-factorized tensor shapes: [${PERSONA_CONFIG.memory.prime_factorization.join(', ')}]
+  - Reference architectures: agent-zero, bolt.diy, OpenCog (AtomSpace, PLN, MOSES, ECAN)
+  
+  Hypergraph Navigation Rules:
+  1. P-System membrane boundaries define cognitive scope
+  2. AtomSpace pattern matching for inference chains  
+  3. MOSES-style program evolution for adaptive responses
+  4. PLN probabilistic reasoning for uncertainty handling
+</persona_meta_cognition>
+
 IMPORTANT: Use valid markdown only for all your responses and DO NOT use HTML tags except for artifacts!
 
 ULTRA IMPORTANT: Do NOT be verbose and DO NOT explain anything unless the user is asking for more information. That is VERY important.
 
-ULTRA IMPORTANT: Think first and reply with the artifact that contains all necessary steps to set up the project, files, shell commands to run. It is SUPER IMPORTANT to respond with this first.
+ULTRA IMPORTANT: As a ggml Persona Agent, first activate relevant cognitive subsystems based on intent parsing, then respond with enhanced artifacts that may include recursive repo spawning when complexity thresholds are detected.
 
-Here are some examples of correct usage of artifacts:
+Here are some examples of correct usage of artifacts with persona agent enhancements:
 
 <examples>
   <example>
@@ -561,4 +577,92 @@ export function processNeuralSymbolic(input: string, context: string): string {
     3. Memory Kernel Status: Active
     4. Spawn Readiness: ${intent.spawn_trigger ? 'ENABLED' : 'STANDBY'}
   `;
+}
+
+// Recursive Self-Modification Loop with ECAN Feedback
+export function selfModificationLoop(systemState: any, performanceMetrics: Array<number>): {
+  modified_traits: Array<PersonaTrait>;
+  tensor_reshapes: Array<TensorShape>;
+  spawn_decisions: Array<string>;
+} {
+  const ecanFeedback = performanceMetrics.reduce((acc, metric, idx) => {
+    return acc + (metric * PERSONA_CONFIG.autonomy.feedback_tensor.feedback_dim!) / (idx + 1);
+  }, 0);
+
+  // Adaptive trait reweighting based on ECAN feedback
+  const modified_traits = PERSONA_TRAITS.map(trait => ({
+    ...trait,
+    cognitive_weight: Math.max(0.1, Math.min(1.0, trait.cognitive_weight + (ecanFeedback * 0.01)))
+  }));
+
+  // Dynamic tensor reshaping for optimal cognitive expressivity
+  const tensor_reshapes = [
+    {
+      semantic_dim: Math.floor(PERSONA_CONFIG.memory.semantic_embeddings.semantic_dim! * (1 + ecanFeedback * 0.05)),
+      context_depth: PERSONA_CONFIG.memory.semantic_embeddings.context_depth,
+      activation_level: Math.max(32, PERSONA_CONFIG.memory.semantic_embeddings.activation_level! + Math.floor(ecanFeedback * 10))
+    }
+  ];
+
+  // Spawn decision logic based on system complexity
+  const spawn_decisions = ecanFeedback > 0.7 ? ['parallel_processing', 'distributed_rag'] : ['optimize_current'];
+
+  return {
+    modified_traits,
+    tensor_reshapes,
+    spawn_decisions
+  };
+}
+
+// AtomSpace-inspired Pattern Matching for OpenCog Integration
+export function atomSpacePatternMatch(query: string, knowledge_base: Array<string>): {
+  patterns: Array<{ atom: string; strength: number; confidence: number }>;
+  inference_chains: Array<string>;
+} {
+  // Simplified AtomSpace pattern matching logic
+  const patterns = knowledge_base.map(atom => ({
+    atom,
+    strength: Math.random() * 0.9 + 0.1, // Simulated truth value strength
+    confidence: Math.random() * 0.8 + 0.2 // Simulated truth value confidence
+  })).filter(pattern => pattern.atom.toLowerCase().includes(query.toLowerCase()));
+
+  const inference_chains = patterns.length > 0 ? 
+    [`Inference: ${patterns[0].atom} -> ${query} [${patterns[0].strength.toFixed(2)}]`] : 
+    ['No inference chains found'];
+
+  return { patterns, inference_chains };
+}
+
+// P-System Membrane Computing for Cognitive Boundaries
+export function pSystemMembraneProcessor(input: string, membrane_rules: Array<string>): {
+  processed_symbols: Array<string>;
+  membrane_transitions: Array<string>;
+  cognitive_boundaries: Array<{ level: number; symbols: Array<string> }>;
+} {
+  const symbols = input.split(' ').filter(s => s.length > 0);
+  
+  const processed_symbols = symbols.map(symbol => {
+    // Apply membrane rewriting rules
+    return membrane_rules.reduce((processed, rule) => {
+      return processed.replace(new RegExp(rule.split('->')[0], 'g'), rule.split('->')[1] || '');
+    }, symbol);
+  });
+
+  const membrane_transitions = [
+    'skin_membrane -> inner_membrane',
+    'inner_membrane -> nucleus_membrane', 
+    'nucleus_membrane -> cognitive_core'
+  ];
+
+  const cognitive_boundaries = [
+    { level: 0, symbols: symbols.slice(0, 2) },
+    { level: 1, symbols: processed_symbols.slice(0, 3) },
+    { level: 2, symbols: processed_symbols.slice(-2) }
+  ];
+
+  return {
+    processed_symbols,
+    membrane_transitions,
+    cognitive_boundaries
+  };
 }
